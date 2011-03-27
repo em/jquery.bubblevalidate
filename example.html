@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Perfectform Examples</title>
+
+    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="jquery.perfectform.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+      $('form').perfectform();
+      
+      $('#first_name').pf_validate(function(a) {
+        return a.length > 1;
+      });
+    });
+    </script>
+    
+    <style>
+    body {
+      background: lightgray;
+    }
+    
+    form {
+      background: white;
+      border: 1px solid gray;
+    }
+    
+    fieldset {
+      border: none;
+    }
+    
+    ul.pair > li {
+      display: block;
+      width: 50%;
+      margin: 10px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+    }
+    
+    input.pf_valid {
+      background: url(images/check_icon.png) no-repeat right center;
+    }
+    
+    </style>
+  </head>
+  <body>
+    
+    <h2>Intro</h2>  
+    
+    <p>Perfectform is an all-in-one solution to creating really fancy forms with fantastic progressive enhancement UI. I decided to make it because many of the advanced features provided by perfectform, while available in other plugins, have cross dependencies that don't naturally integrate without ugly shimming. Therefore a single library that aims to provide all of the features listed seems appropriate. I also simply disagree with many of the approaches taken by other plugins and believe Perfectform does it right.</p>    
+
+    <h2>Design Goals</h2>  
+    * To integrate many modern conventions in advanced form validation, progressive enhancement, and visual feedback into one clean plugin with really good defaults that should rarely need to be changed.
+    * To take advantage of as much HTML5 symantics as possible.
+    * Remain very flexible with layout.
+    <ol>
+      
+     <h2>Features</h2>  
+
+      <li>Validation
+        <p>I didn't like the approach that other form validator plugins took. The way I chose to implement validators is that you simply supply a validator callback, who's return value determines the current validity state of an input. It also allows for async validation, by returning nothing, and later calling pf_validated() with the result. This comes in handy with ajax. If something is required then the validator should just check that str.length > 0. I don't think it's necessary for the validator to go that deep into what makes something valid or not. Instead I focused on how the validation result affects the DOM, and conversely the user experience. This is discussed more in the next section.</p>
+      </li>
+        
+    <li>Validity Bubbling
+      <p>What I have been calling "validity bubbling", is a concept whereby the states of valid, invalid, and neutral, get "bubbled" to parent "validation groups". The signup form example below demonostrates validity bubbling on fieldset groups, where valid fieldsets are styled with a success check mark, giving positive feedback to the user that a set of requirements have been fulfilled and they can move on. A validator that returns nothing is "neutral", meaning nothing should be presented to the user. A validator that returns a string, or an array of strings, is "invalid with errors". This marks the field as invalid and bubbles the state up to all validation groups. When all fields that are validated within a validation group become valid, then the validation group is also valid. Furthermore buttons with the class "pf_submit" or "pf_wizard_next" are switched between enabled and disabled with the group's validation state. So a form element being a validation group, contains a submit button, which is immediately disabled on perfectform initialization, and only re-enabled for the user to click once all fields in the form are validated.</p>
+     </li>
+
+     <li>Server Error Integration
+       <p>Perfectform automatically looks for server errors in the DOM and treats them just as client side validation. A Rails helper is also included for generating the pf_errors list</p>
+     </li>
+
+    <li>HTML5 Validation
+        <p>Using the built-in validator, perfectform automatically implements HTML5 validation, i.e. special input types like 'email', 'required' and 'pattern' attributes. The results of these validation manifests themselves through submit button enabling/disabling, and validity states.</p>
+    </li>
+
+    <li>HTML5 Placeholder
+      <p>I know there's tons of jQuery plugins that do simple placeholder text. First of all, it's done right in perfectform. The HTML5 'placeholder' attribute is looked at, and only simulated by value substitution in non-supporting browsers. One nice benefit to this is that password type inputs' placeholders don't show up as stars. It also doesn't break if someone enters the exact placeholder text as real input.</p>
+      <p>Another reason it's baked in to perfectform is that it lets us depend on a val() wrapper, pf_val(), for all of our value reads and writes, abstracting out the confusion as to whether the value in an input is placeholder text or not. </p>
+    </li>
+
+    <li>Helper Text (HTML5)
+      <p>The html5 'details' element is used to markup</p>
+    </li>
+    
+    <li>Transposing
+      <p>Makes it easy autopopulate proceeding fields with the input given previously.</p>
+    </li>
+
+    <li>Grid Layout Semantics
+      <p>perfectform.css is a basic template for a 4 column 640 grid. You should tailor it to your design.</p>
+    </li>
+
+    <li>Wizards
+      <p>This might seem outside of the scope of the plugin, but it made so much sense to use validation bubbling to enabled/disable wizard "next" buttons and hide/show individual wizard pages that I decided to include the feature. Just change your perspective of what a wizard is. In this model, it's simply a presentation means of validation groups.</p>
+    </li>
+
+    </ol>
+    
+    <h1>Signup Form</h1>
+
+    <form>
+      <fieldset id="first_last">
+      <ul>
+        <ul class="pair">
+          <li>
+            <input id="first_name" type="text" />
+          </li>
+          <li>
+            <input id="last_name" type="text" />
+          </li>
+        </ul>
+        
+        <li>
+          Poop
+        </li>
+      <ul>
+
+        <ul class="pair">
+          <li>
+            <input id="first_name" type="text" />
+          </li>
+          <li>
+            <input id="last_name" type="text" />
+          </li>
+        </ul>
+      </fieldset>
+    </form>
+    
+    <h1>Login</h1>      
+
+    <h1>Edit Profile</h1>
+    <p>This is an example HTML document.<p>
+
+    <form>
+    </form>
+    
+    <h1>Wizard</h1>
+    <p>This is an example HTML document.<p>
+      
+ 
+  </body>
+</html>
